@@ -33,8 +33,21 @@ function createVis(data) {
         .attr("viewBox", [0, 0, width, height])
         .attr("style", "max-width: 100%; height: auto;");
 
+       
+       
+    // zoom 
+    const g = svg.append("g");
+    const zoom = d3.zoom()
+    .scaleExtent([0.1, 8]) // min 10% zoom, max 800%
+    .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+    });
+
+    svg.call(zoom);
+    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2).scale(0.4).translate(-width / 2, -height / 2));
+
     //edges (line for each edge, and a circle for each node)
-    const link = svg.append("g")
+    const link = g.append("g")
         .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
         .selectAll()
@@ -43,7 +56,7 @@ function createVis(data) {
         .attr("stroke-width", 1); 
 
     //nodes
-    const node = svg.append("g")
+    const node = g.append("g")
         .attr("stroke", "#fff")
         .attr("stroke-width", 1.5)
         .selectAll()
@@ -74,6 +87,14 @@ function createVis(data) {
         event.subject.fx = null;
         event.subject.fy = null;
     }
+
+    //reset zoom button
+    d3.select("#reset-zoom").on("click", () => {
+        svg.transition().duration(500).call(
+            zoom.transform,
+            d3.zoomIdentity.translate(width / 2, height / 2).scale(0.4).translate(-width / 2, -height / 2)
+        );
+    });
 }
 
 function init() {
