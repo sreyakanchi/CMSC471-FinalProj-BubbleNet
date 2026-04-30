@@ -6,25 +6,42 @@
     <title>Bubble Net</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
 
-    <div class="container"> <!-- Centers content and sets max width -->
+<body>
+    <div class="container"> 
         <h1>Bubble Net</h1>
+        <p class="subtitle">
+            Some random subtitle... how does political ideology whatever whatever for social media? click on each category to see... dot dot 
+        </p>
+
         <div id="controls">
-            <p id="value"></p>
-            <div id="slider"></div>
-            Dropdown: <select id="dropdown" class="variable"></select>
-            <button id="reset-zoom">Reset Zoom</button>
+            <div class="topic-group-label">Political topics</div>
+            <div id="topic-buttons-political"></div>
+
+            <div class="topic-group-label">Non-political topics</div>
+            <div id="topic-buttons-nonpolitical"></div>
+
+        <div id="status-bar">
+                <span>
+                    Viewing: <strong id="current-topic-label">Minimum Wage</strong>
+                    <span id="current-topic-type" class="type-badge non-political">Political</span>
+                </span>
+                <div id="right-controls">
+                    <!-- TODO: would be cool to have a slider-type looking legend, showing the gradient between conservative and liberal?  -->
+                    <button id="reset-zoom">Reset zoom</button>
+                </div>
+            </div>
+        </div>
 
         </div>
-        <div id="vis"></div> <!--  Will hold our visualization (SVG) -->
+        <div id="vis"></div> 
     </div>   
     <div id="tooltip" style="display:none"></div> 
 
  
     <!-- Load D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <!-- <script src="https://unpkg.com/d3-simple-slider"></script> -->
     <script src="js/script.js"></script>
 </body>
 </html>
