@@ -67,36 +67,32 @@ h1 {
 }
 
 .topic-btn[data-type="political"] {
-    background-color: #fdecea;
-    color: #a32d2d;
-    border: 0.5px solid #f09595;
+    background-color: #faeeda;
+    color: #633806;
+    border: 0.5px solid #ef9f27;
 }
-
 .topic-btn[data-type="political"]:hover {
-    background-color: #f7c1c1;
+    background-color: #fac775;
 }
-
 .topic-btn[data-type="political"].active {
-    background-color: #e24b4a;
+    background-color: #ba7517;
     color: white;
-    border-color: #a32d2d;
+    border-color: #633806;
     font-weight: 500;
 }
 
 .topic-btn[data-type="non-political"] {
-    background-color: #e8f2fb;
-    color: #0c447c;
-    border: 0.5px solid #85b7eb;
+    background-color: #e1f5ee;
+    color: #085041;
+    border: 0.5px solid #5dcaa5;
 }
-
 .topic-btn[data-type="non-political"]:hover {
-    background-color: #b5d4f4;
+    background-color: #9fe1cb;
 }
-
 .topic-btn[data-type="non-political"].active {
-    background-color: #185fa5;
+    background-color: #0f6e56;
     color: white;
-    border-color: #0c447c;
+    border-color: #085041;
     font-weight: 500;
 }
 
@@ -137,15 +133,14 @@ h1 {
 }
 
 .type-badge.political {
-    background-color: #fdecea;
-    color: #a32d2d;
-    border: 0.5px solid #f09595;
+    background-color: #faeeda;
+    color: #633806;
+    border: 0.5px solid #ef9f27;
 }
-
 .type-badge.non-political {
-    background-color: #e8f2fb;
-    color: #0c447c;
-    border: 0.5px solid #85b7eb;
+    background-color: #e1f5ee;
+    color: #085041;
+    border: 0.5px solid #5dcaa5;
 }
 
 
