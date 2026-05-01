@@ -23,18 +23,42 @@ function createVis(data) {
     if (simulation) simulation.stop();
     g.selectAll("*").remove();
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10); // TODO: change color 
+    // smooth transition from blue to white to red
+    const colorScale = d3.scaleLinear()
+        .domain([-3, 0, 3])
+        .range(["#4575b4", "#f7f7f7", "#d73027"])
+        .interpolate(d3.interpolateHcl)
+        .clamp(true);
 
+    const color = d => colorScale(d.ideology);
+
+    // for size scaling
     const links = data.edges.map(d => ({...d}));
     const nodes = data.nodes.map(d => ({...d}));
+
+    const degree = {};
+    links.forEach(l => {
+        const sourceId = l.source.id || l.source;
+        const targetId = l.target.id || l.target;
+        degree[sourceId] = (degree[sourceId] || 0) + 1;
+        degree[targetId] = (degree[targetId] || 0) + 1;
+    });
+    nodes.forEach(n => {
+        n.degree = degree[n.id] || 0;
+    });
+    
+    // size, can change range later
+    const radiusScale = d3.scaleSqrt()
+        .domain(d3.extent(nodes, d => d.degree))
+        .range([6, 18]);
 
     //create simulation
     simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).strength(0.5))
-        .force("charge", d3.forceManyBody().strength(-30))  // was -300
+        .force("charge", d3.forceManyBody().strength(-15))  // was -300
         .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collide", d3.forceCollide(d => radiusScale(d.degree) + 1))
         .on("tick", ticked);  
-
 
     function ticked() {
         link
@@ -50,7 +74,7 @@ function createVis(data) {
 
     //edges (line for each edge, and a circle for each node)
     const link = g.append("g")
-        .attr("stroke", "#999")
+        .attr("stroke", "#bbbbbb")
         .attr("stroke-opacity", 0.6)
         .selectAll()
         .data(links)
@@ -64,8 +88,11 @@ function createVis(data) {
         .selectAll()
         .data(nodes)
         .join("circle")
-        .attr("r", 5)
-        .attr("fill", "black"); // TODO: color by ideology 
+        // scaling
+        .attr("r", d => radiusScale(d.degree))
+        // color
+        .attr("fill", d => color(d));
+
 
     //Drag behavior (same as lab 7)
     node.call(d3.drag()
@@ -160,6 +187,74 @@ function init() {
             createVis(allData["minimum_wage"]);
         })
         .catch(error => console.error("Error loading data.json:", error));
-}
 
+
+
+    // legend stuff
+    const legendStops = [
+        { offset: "0%",   color: "#4575b4", label: "Liberal" },
+        { offset: "25%",  color: "#67a9cf", label: "" },
+        { offset: "50%",  color: "#cccccc", label: "Moderate" },
+        { offset: "75%",  color: "#ef8a62", label: "" },
+        { offset: "100%", color: "#d73027", label: "Conservative" },
+    ];
+
+    const legendHeight = 60;
+    const legendBarWidth = 8;
+
+    const legend = svg.append("g")
+        //.attr("transform", `translate(${width - 140}, 20)`);
+        .attr("transform", `translate(40, 40)`);
+    
+    legend.append("text")
+        .attr("x", 0).attr("y", 0)
+        .style("font-size", "11px")
+        .style("font-weight", "bold")
+        .attr("fill", "#1a1a1a")
+        .text("Political Ideology");
+
+    // gradient definition — y2=100% makes it vertical
+    const gradient = svg.append("defs")
+        .append("linearGradient")
+        .attr("id", "ideology-gradient")
+        .attr("x1", "0%").attr("y1", "0%")
+        .attr("x2", "0%").attr("y2", "100%");
+
+    legendStops.forEach(stop => {
+        gradient.append("stop")
+            .attr("offset", stop.offset)
+            .attr("stop-color", stop.color);
+    });
+
+    // gradient bar itself
+    legend.append("rect")
+        .attr("x", 0).attr("y", 12)
+        .attr("width", legendBarWidth)
+        .attr("height", legendHeight)
+        .attr("fill", "url(#ideology-gradient)");
+
+    // labels next to each stop
+    legend.selectAll(".legend-label")
+        .data(legendStops)
+        .join("text")
+        .attr("x", legendBarWidth + 8)
+        .attr("y", (d, i) => 20 + (i / (legendStops.length - 1)) * legendHeight * 0.83)
+        .style("font-size", "9px")
+        //.style("font-family", "Arial, sans-serif")
+        .attr("fill", "#525252")
+        .text(d => d.label);
+
+    legend.insert("rect", ":first-child")
+        .attr("x", -10)
+        .attr("y", -20)
+        .attr("width", 120)
+        .attr("height", legendHeight + 45)
+        .attr("fill", "#f5f5f5")
+        .attr("fill-opacity", 0.8)
+        .attr("stroke", "#cccccc")  // stroke stays fully opaque
+        .attr("stroke-width", 0.5)
+        .attr("rx", 12);
+    
+
+}
 window.addEventListener("load", init);
