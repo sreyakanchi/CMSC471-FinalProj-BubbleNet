@@ -91,7 +91,23 @@ function createVis(data) {
         // scaling
         .attr("r", d => radiusScale(d.degree))
         // color
-        .attr("fill", d => color(d));
+        .attr("fill", d => color(d))
+        .on('mouseover', function(event, d){
+            d3.select('#tooltip')
+            .style("display", 'block')
+            .html(`<strong>Ideology Score:</strong> ${d.ideology}`)
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY - 28) + "px");    
+            d3.select(this)
+            .style('stroke', 'black')
+            .style('stroke-width', '1px')
+        })
+        .on('mouseout', function(event, d){
+            d3.select('#tooltip')
+            .style('display', 'none') 
+            d3.select(this)
+            .style('stroke-width', '0px')
+        });
 
 
     //Drag behavior (same as lab 7)
