@@ -22,6 +22,7 @@ const height = 600;
 function createVis(data) {
     if (simulation) simulation.stop();
     g.selectAll("*").remove();
+    d3.select("#bar-chart").selectAll("*").remove();
 
     // smooth transition from blue to white to red
     const colorScale = d3.scaleLinear()
@@ -35,6 +36,29 @@ function createVis(data) {
     // for size scaling
     const links = data.edges.map(d => ({...d}));
     const nodes = data.nodes.map(d => ({...d}));
+
+    //counting idealogies for bar graph 
+    const ideologyCounts = {
+        "Very Liberal": 0,
+        "Liberal": 0,
+        "Moderate": 0,
+        "Conservative": 0,
+        "Very Conservative": 0
+    };
+
+    nodes.forEach(d => {
+        if (d.ideology <= -2) {
+            ideologyCounts["Very Liberal"]++;
+        } else if (d.ideology < -1) {
+            ideologyCounts["Liberal"]++;
+        } else if (d.ideology <= 1) {
+            ideologyCounts["Moderate"]++;
+        } else if (d.ideology < 2) {
+            ideologyCounts["Conservative"]++;
+        } else {
+            ideologyCounts["Very Conservative"]++;
+        }
+    });
 
     const degree = {};
     links.forEach(l => {
@@ -50,11 +74,11 @@ function createVis(data) {
     // size, can change range later
     const radiusScale = d3.scaleSqrt()
         .domain(d3.extent(nodes, d => d.degree))
-        .range([6, 18]);
+        .range([4, 40]);
 
     //create simulation
     simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).strength(0.5))
+        .force("link", d3.forceLink(links).id(d => d.id).strength(1))
         .force("charge", d3.forceManyBody().strength(-15))  // was -300
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide(d => radiusScale(d.degree) + 1))
@@ -92,6 +116,86 @@ function createVis(data) {
         .attr("r", d => radiusScale(d.degree))
         // color
         .attr("fill", d => color(d));
+
+    const barData = Object.entries(ideologyCounts).map(([group, count]) => ({
+        group,
+        count
+    }));
+
+    //bar chart to show idealogical distribution
+    const barSvgWidth = 700;
+    const barSvgHeight = 350;
+    const margin = { top: 80, right: 10, bottom: 40, left: 10 };
+
+    const barSvg = d3.select("#bar-chart")
+        .append("svg")
+        .attr("width", barSvgWidth)
+        .attr("height", barSvgHeight)
+        .attr("viewBox", [0, 0, barSvgWidth, barSvgHeight])
+
+    const barChart = barSvg.append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const barWidth = barSvgWidth - margin.left - margin.right;
+    const barHeight = barSvgHeight - margin.top - margin.bottom;
+
+    const x = d3.scaleBand()
+        .domain(barData.map(d => d.group))
+        .range([0, barWidth])
+        .padding(0.35);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(barData, d => d.count)])
+        .range([barHeight, 0]);
+
+    barChart.selectAll("rect")
+        .data(barData)
+        .join("rect")
+        .attr("x", d => x(d.group))
+        .attr("y", d => y(d.count))
+        .attr("width", x.bandwidth())
+        .attr("height", d => barHeight - y(d.count))
+        .attr("fill", d => {
+            if (d.group === "Very Liberal") return colorScale(-3);
+            if (d.group === "Liberal") return colorScale(-1.5);
+            if (d.group === "Moderate") return colorScale(-0.2);
+            if (d.group === "Conservative") return colorScale(1.5);
+            if (d.group === "Very Conservative") return colorScale(3);
+        }); 
+
+    barChart.selectAll(".bar-label")
+        .data(barData)
+        .join("text")
+        .attr("class", "bar-label")
+        .attr("x", d => x(d.group) + x.bandwidth() / 2)
+        .attr("y", d => y(d.count) - 10)
+        .attr("text-anchor", "middle")
+        .text(d => d.count);
+
+    barChart.selectAll(".bar-name")
+        .data(barData)
+        .join("text")
+        .attr("class", "bar-name")
+        .attr("x", d => x(d.group) + x.bandwidth() / 2)
+        .attr("y", barHeight + 15)
+        .attr("text-anchor", "middle")
+        .text(d => d.group);
+
+    const currentTopic = TOPICS.find(t => allData[t.key] === data);
+
+    barSvg.append("text")
+        .attr("class", "bar-title")
+        .attr("x", barSvgWidth / 2)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .text(`Twitter User Distribution for ${currentTopic.label}`);
+    barSvg.append("text")
+        .attr("class", "bar-caption")
+        .attr("x", barSvgWidth / 2)
+        .attr("y", 48)
+        .attr("text-anchor", "middle")
+        .text("Represents the breakdown in ideological distribution among the users sampled from the overall dataset");
+
 
 
     //Drag behavior (same as lab 7)

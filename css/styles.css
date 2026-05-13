@@ -209,4 +209,38 @@ h1 {
 .axis-label {
     font-size: 14px;
     font-weight: bold;
+} 
+
+.chart-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 24px;
+}
+
+#bar-chart svg {
+    width: 100%;
+    height: auto;
+    display: block;
+} 
+
+.bar-title {
+    font-size: 23px;
+    font-weight: 400;
+}
+
+.bar-caption {
+    font-size: 11px;
+    fill: #666;
+    font-family: Arial, sans-serif;
+}
+
+.bar-label {
+    font-size: 12px;
+}
+
+.bar-name {
+    font-size: 11px;
 }
