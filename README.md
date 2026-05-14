@@ -1,6 +1,10 @@
 # CMSC471-FinalProj-BubbleNet
 ### Exploring Political Echo Chambers on Twitter (X) 
 
+A visualiation of retweet networks across 11 topics drawn from a study of 150 million tweets. Each node is a Twitter user, colored on a continuous spectrum from blue (very liberal) to red (very conservative) based on estimated ideology scores. Edges connect users who retweeted another's tweet. 
+
+Select any topic using the buttons above the graph to view any patterns arising depending on the discussion, whether political or non-political. 
+
 The project can be viewed here: https://sreyakanchi.github.io/CMSC471-FinalProj-BubbleNet/
 
 ## Dataset
