@@ -13,17 +13,11 @@
         <p class="subtitle">
             This visualization looks at how echo chambers form across ideological divides for a variety of political and
             non-political topics on Twitter. Click on the category to see clusters form and how information is spread! 
-            Visulization based on the study "Tweeting From Left to Right: Is Online
-            Political Communication More Than an
-            Echo Chamber?"
         </p>
         <p class="subtitle">
             Visulization is based on the study "Tweeting From Left to Right: Is Online
-            Political Communication More Than an
-            Echo Chamber?"
-        </p>
-        <p class="subtitle">
-            See more information about the visualization and orginal study below!
+            Political Communication More Than an Echo Chamber?" See more information about the visualization and orginal study below!
+
         </p>
 
         <div id="controls">
@@ -47,10 +41,175 @@
 
         </div>
         <div id="vis"></div> 
-        <div id="additional">
-            <h3 class="h3-title">Background</h3>
+        <div class="chart-container">
+            <div id="bar-chart"></div>
+        </div>
+        <div class="background-info">
+            <h2>Background</h2>
+            <h4>Echo Chambers & Politics Online</h4>
             <p>
+                Echo chambers exist as a group of individuals sharing and reinforcing a similar belief or narrative. Members favor information adhering to the belief of the echo chamber and will expose themselves to information that reinforces their views and dissenting opinions are often ignored. Echo chambers function as environments where beliefs get strengthened with repeated interactions with their fellow members or sources of information that are of the same belief
             </p>
+            <p>
+                With the invention of the internet, political information is more available than ever and in turn, has created abundant oppurtunities to communicate with peers about current events. However, individuals will often only communicate with those with similar ideological beliefs and opinions on current events. Therefore, only interacting with political information that reinforces their current beliefs often resulting in echo chambers due to this selective exposure of information. The internet has made political information more available and created abundant oppurtunities to communicate with peers about current events. Communication with individuals with diverse beliefs and ideas can be beneficial. However, online echo chambers can facilitate social extremism and political polarization.
+            </p>            <h4>Tweeting From Left to Right: Is Online Political Communication More Than an Echo Chamber?</h4>
+            <h6>Goal of Study</h6>
+            <p>
+                The study conducted by Barberá et al. at NYU estimated the ideology of 3.8 million twitter users. Using a data set of around 150 million tweets on 12 political and non-political issues, the researchers examined whether online communication resembles an echo chambers across ideological lines.
+            </p>
+            <p>
+                Looked at 3 Different Metrics to examine whether communication resembles echo chambers:
+            </p>
+            <ul>
+                <li>Percentage of retweets that took place among individuals who were ideologically similar
+                </li>
+                <li>Degree of ideological homogeneity in communities of users detected in retweet network
+                </li>
+                <li>Average ideological extremity of the content that was spread via retweets
+                </li>
+            </ul>
+            <h6>Methods</h6>
+            <p>
+                The researchers calculated political ideology based on who users followed on twitter. The sample of individuals in study where twitter users who has at least one tweet on one of the 12 topics and followed at least one of the 1206 political accounts (excluding ghost accounts and bots). They focused on the retweeting activity between users of different ideologies in order to examine how communication occurs. 
+            </p>
+            <p>The topics included 6 political and 6 non-political topics that were found through selected keywords that were used to search for the tweets.
+            </p>
+            <h6>Topics</h6>
+            <p>Click on each topic for more information!</p>
+            <div class="topics-wrapper">
+                <div class="topics-section">
+                    <div class="topic-col">
+                        <p class="topics-col-label">Political</p>
+                        <details class="topic-dropdown" data-type="political">
+                            <summary>Budget</summary>
+                            <p><strong>Example Search Terms:</strong> budget, deficit, sequester, social security
+                                <br><strong>Time Period:</strong> 6/1/2013–12/31/2013
+                                <br><strong>Number of Tweets (in millions):</strong> 7.7
+                            </p>
+                        </details>
+                        <details class="topic-dropdown" data-type="political">
+                            <summary>2013 Government Shutdown</summary>
+                            <p><strong>Example Search Terms:</strong> shutdown, #gopshutdown, boehner, furlough
+                                <br><strong>Time Period:</strong> 10/1/2013–11/1/2013
+                                <br><strong>Number of Tweets (in millions):</strong> 12.4
+                            </p>                    
+                        </details>
+                        <details class="topic-dropdown" data-type="political">
+                            <summary>Marriage Equality</summary>
+                            <p><strong>Example Search Terms:</strong> scotus, doma, gay marriage, same sex marriage
+                                <br><strong>Time Period:</strong> 6/26/2013–12/2/2013
+                                <br><strong>Number of Tweets (in millions):</strong> 8.2
+                            </p>                      
+                        </details>
+                        <details class="topic-dropdown" data-type="political">
+                            <summary>Minimum Wage</summary>
+                            <p><strong>Example Search Terms:</strong> minimum wage, #raisethewage, #tenten, #timefor1010
+                                <br><strong>Time Period:</strong> 2/3/2014–4/16/2014
+                                <br><strong>Number of Tweets (in millions):</strong> 0.2
+                            </p>                     
+                        </details>
+                        <details class="topic-dropdown" data-type="political">
+                            <summary>2014 State of the Union Address</summary>
+                            <p><strong>Example Search Terms:</strong> state of the union, #sotu2014, republican response
+                                <br><strong>Time Period:</strong> 1/27/2014–2/2/2014
+                                <br><strong>Number of Tweets (in millions):</strong> 2.7
+                            </p>                     
+                        </details>
+                        <details class="topic-dropdown" data-type="political">
+                            <summary>2012 Presidential Campaign (Obama vs Romney)</summary>
+                            <p><strong>Example Search Terms:</strong> obama, romney
+                                <br><strong>Time Period:</strong>  8/15/2012–11/6/2012
+                                <br><strong>Number of Tweets (in millions):</strong> 62.3
+                            </p>                    
+                        </details>       
+                    </div>
+                    <div class="topic-col">
+                        <p class="topics-col-label">Non-Political</p>
+                        <details class="topic-dropdown" data-type="non-political">
+                            <summary>Boston Marathon Bombing</summary>
+                            <p><strong>Example Search Terms:</strong>  boston, marathon, explosion, #bostonmarathon
+                                <br><strong>Time Period:</strong> 4/15/2013–4/30/2013
+                                <br><strong>Number of Tweets (in millions):</strong> 13.9
+                            </p>
+                        </details>
+                        <details class="topic-dropdown" data-type="non-political">
+                            <summary>Newtown School Shooting (Sandy Hook)</summary>
+                            <p><strong>Example Search Terms:</strong> newtown, sandy hook, gun control, #ctshooting
+                                <br><strong>Time Period:</strong> 12/10/2012–1/8/2013
+                                <br><strong>Number of Tweets (in millions):</strong> 5.1
+                            </p>                    
+                        </details>
+                        <details class="topic-dropdown" data-type="non-political">
+                            <summary>2014 Winter Olympic Games</summary>
+                            <p><strong>Example Search Terms:</strong>  olympics, sochi, team usa, #olympics2014
+                                <br><strong>Time Period:</strong> 2/7/2014–2/19/2014
+                                <br><strong>Number of Tweets (in millions):</strong> 7.7
+                            </p>                      
+                        </details>
+                        <details class="topic-dropdown" data-type="non-political">
+                            <summary>2014 Oscars</summary>
+                            <p><strong>Example Search Terms:</strong> oscars, #oscars2014, academy awards
+                                <br><strong>Time Period:</strong>  2/19/2014–3/11/2014
+                                <br><strong>Number of Tweets (in millions):</strong> 10.6
+                            </p>                     
+                        </details>
+                        <details class="topic-dropdown" data-type="non-political">
+                            <summary>2014 Super Bowl (Denver Broncos vs Seattle Seahawks)</summary>
+                            <p><strong>Example Search Terms:</strong> super bowl, broncos, seahawks, touchdown
+                                <br><strong>Time Period:</strong> 2/1/2014–2/3/2014
+                                <br><strong>Number of Tweets (in millions):</strong> 5.0
+                            </p>                     
+                        </details>
+                        <details class="topic-dropdown" data-type="non-political">
+                            <summary>Syria</summary>
+                            <p><strong>Example Search Terms:</strong> syria, intervention, chemical weapons, al-assad
+                                <br><strong>Time Period:</strong>  8/28/2013–9/30/2013
+                                <br><strong>Number of Tweets (in millions):</strong> 7.8
+                            </p>                    
+                        </details>
+                    </div>
+                </div>
+            </div>
+            <h6>Key Findings</h6>
+            <ul>
+                <li>Level of political polarization depends heaviliy on the topic involved
+                </li>
+                <li>Twitter discussions of the 2012 election, the 2013 government shutdown, and the 2014 State of the Union Address resembled an echo chamber. Information about these events was exchanged primarily among individuals with highly similar ideological preferences.
+                </li>
+                <li>Responses to the Boston Marathon bombing in 2013, the 2014 Super Bowl, and the 2014 Winter Olympics did not resemble an echo chamber. Instead, individuals of differing ideological persuasions frequently read and retweeted one another’s messages
+                </li>
+                <li>
+                    Public discussion of other issues, such as the aftermath of the Newtown shooting in 2012, reflected a dynamic process, with conversation initially occurring across ideological boundaries, but transforming fairly rapidly into highly polarized exchanges.
+                </li>
+                <li>
+                    Across all topics, liberals were more likely than conservatives to engage in cross-ideological retweeting
+                </li>
+            </ul>
+
+            <h2>Data Selection</h2>
+            <p>
+                The data comes from an academic dataset from the 2015 NYU study that analyzed 150 million tweets across 12 topics to study political echo chambers. 
+            </p>
+            <p>
+                We have two types of files: 1) an ideology score list for every user in the dataset, which is a single number between -3 (very liberal) to +3 (very conservative). This score is estimated by looking at which political accounts each person follows; 2) retweet edge lists for all 12 topics, where each row shows who retweeted whose tweet, with both user’s ideology scores attached. 
+            </p>
+            <p>In order to explore how echo chambers form across all topics within the limits of our own computers, we randomly chose 1000 tweets from each topic to visualize. We ended up not being able to examine topic of the 2012 election, due to the CSV not be created from the R dataset and there being data formatting issues.
+            </p>
+            <h2>Sources</h2>
+            <ul>
+                <li>
+                    <a href="https://github.com/pablobarbera/echo_chambers">https://github.com/pablobarbera/echo_chambers</a>                    
+                </li>
+                <li>
+                    <a href="https://connorjerzak.com/wp-content/uploads/2016/08/Psychological-Science-2015-Barbera%CC%81-1531-42.pdf">https://connorjerzak.com/wp-content/uploads/2016/08/Psychological-Science-2015-Barbera%CC%81-1531-42.pdf</a>
+                </li>
+                <li>
+                    <a href="https://doi.org/10.1073/pnas.2023301118">https://doi.org/10.1073/pnas.2023301118</a>
+                </li>
+                <li>
+                    <a href="https://doi.org/10.1038/srep37825">https://doi.org/10.1038/srep37825</a>
+                </li>
+            </ul>
         </div>
     </div>   
     <div id="tooltip" style="display:none"></div> 

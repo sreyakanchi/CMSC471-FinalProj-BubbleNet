@@ -10,7 +10,7 @@ const TOPICS = [
     { key: "oscars",             label: "Oscars",              type: "non-political" },
     { key: "sotu",               label: "State of the Union",  type: "political" },
     { key: "superbowl",          label: "Super Bowl",          type: "non-political" },
-    { key: "syria",              label: "Syria",               type: "political" },
+    { key: "syria",              label: "Syria",               type: "non-political" },
 ];
 
 let allData;
@@ -22,6 +22,7 @@ const height = 600;
 function createVis(data) {
     if (simulation) simulation.stop();
     g.selectAll("*").remove();
+    d3.select("#bar-chart").selectAll("*").remove();
 
     // smooth transition from blue to white to red
     const colorScale = d3.scaleLinear()
@@ -35,6 +36,29 @@ function createVis(data) {
     // for size scaling
     const links = data.edges.map(d => ({...d}));
     const nodes = data.nodes.map(d => ({...d}));
+
+    //counting idealogies for bar graph 
+    const ideologyCounts = {
+        "Very Liberal": 0,
+        "Liberal": 0,
+        "Moderate": 0,
+        "Conservative": 0,
+        "Very Conservative": 0
+    };
+
+    nodes.forEach(d => {
+        if (d.ideology <= -2) {
+            ideologyCounts["Very Liberal"]++;
+        } else if (d.ideology < -1) {
+            ideologyCounts["Liberal"]++;
+        } else if (d.ideology <= 1) {
+            ideologyCounts["Moderate"]++;
+        } else if (d.ideology < 2) {
+            ideologyCounts["Conservative"]++;
+        } else {
+            ideologyCounts["Very Conservative"]++;
+        }
+    });
 
     const degree = {};
     links.forEach(l => {
@@ -50,11 +74,11 @@ function createVis(data) {
     // size, can change range later
     const radiusScale = d3.scaleSqrt()
         .domain(d3.extent(nodes, d => d.degree))
-        .range([6, 18]);
+        .range([4, 40]);
 
     //create simulation
     simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).strength(0.5))
+        .force("link", d3.forceLink(links).id(d => d.id).strength(1))
         .force("charge", d3.forceManyBody().strength(-15))  // was -300
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide(d => radiusScale(d.degree) + 1))
@@ -82,6 +106,20 @@ function createVis(data) {
         .attr("stroke-width", 1); 
 
     //nodes
+    function ideology(ideology_score){
+        if(ideology_score <= -2){
+            return "Very Liberal"
+        } else if (ideology_score < -1){
+            return "Liberal"
+        } else if(ideology_score <= 1){
+            return "Moderate"
+        } else if(ideology_score < 2){
+            return "Conservative"
+        } else {
+            return "Very Conservative"
+        }
+    }
+
     const node = g.append("g")
         .attr("stroke", "#fff")
         .attr("stroke-width", 1.5)
@@ -95,7 +133,7 @@ function createVis(data) {
         .on('mouseover', function(event, d){
             d3.select('#tooltip')
             .style("display", 'block')
-            .html(`<strong>Ideology Score:</strong> ${d.ideology}`)
+            .html(`<strong>${ideology(d.ideology)}</strong><br><strong>Ideology Score:</strong> ${d.ideology}`)
             .style("left", (event.pageX + 20) + "px")
             .style("top", (event.pageY - 28) + "px");    
             d3.select(this)
@@ -108,6 +146,86 @@ function createVis(data) {
             d3.select(this)
             .style('stroke-width', '0px')
         });
+
+    const barData = Object.entries(ideologyCounts).map(([group, count]) => ({
+        group,
+        count
+    }));
+
+    //bar chart to show idealogical distribution
+    const barSvgWidth = 700;
+    const barSvgHeight = 350;
+    const margin = { top: 80, right: 10, bottom: 40, left: 10 };
+
+    const barSvg = d3.select("#bar-chart")
+        .append("svg")
+        .attr("width", barSvgWidth)
+        .attr("height", barSvgHeight)
+        .attr("viewBox", [0, 0, barSvgWidth, barSvgHeight])
+
+    const barChart = barSvg.append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const barWidth = barSvgWidth - margin.left - margin.right;
+    const barHeight = barSvgHeight - margin.top - margin.bottom;
+
+    const x = d3.scaleBand()
+        .domain(barData.map(d => d.group))
+        .range([0, barWidth])
+        .padding(0.35);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(barData, d => d.count)])
+        .range([barHeight, 0]);
+
+    barChart.selectAll("rect")
+        .data(barData)
+        .join("rect")
+        .attr("x", d => x(d.group))
+        .attr("y", d => y(d.count))
+        .attr("width", x.bandwidth())
+        .attr("height", d => barHeight - y(d.count))
+        .attr("fill", d => {
+            if (d.group === "Very Liberal") return colorScale(-3);
+            if (d.group === "Liberal") return colorScale(-1.5);
+            if (d.group === "Moderate") return colorScale(-0.2);
+            if (d.group === "Conservative") return colorScale(1.5);
+            if (d.group === "Very Conservative") return colorScale(3);
+        }); 
+
+    barChart.selectAll(".bar-label")
+        .data(barData)
+        .join("text")
+        .attr("class", "bar-label")
+        .attr("x", d => x(d.group) + x.bandwidth() / 2)
+        .attr("y", d => y(d.count) - 10)
+        .attr("text-anchor", "middle")
+        .text(d => d.count);
+
+    barChart.selectAll(".bar-name")
+        .data(barData)
+        .join("text")
+        .attr("class", "bar-name")
+        .attr("x", d => x(d.group) + x.bandwidth() / 2)
+        .attr("y", barHeight + 15)
+        .attr("text-anchor", "middle")
+        .text(d => d.group);
+
+    const currentTopic = TOPICS.find(t => allData[t.key] === data);
+
+    barSvg.append("text")
+        .attr("class", "bar-title")
+        .attr("x", barSvgWidth / 2)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .text(`Twitter User Distribution for ${currentTopic.label}`);
+    barSvg.append("text")
+        .attr("class", "bar-caption")
+        .attr("x", barSvgWidth / 2)
+        .attr("y", 48)
+        .attr("text-anchor", "middle")
+        .text("Represents the breakdown in ideological distribution among the users sampled from the overall dataset");
+
 
 
     //Drag behavior (same as lab 7)
@@ -133,10 +251,6 @@ function createVis(data) {
         event.subject.fy = null;
     }
 }
-
-
-
-
 
 // builds the  buttons to toggle between diff topics 
 function buildTopicButtons(defaultKey) {
@@ -164,8 +278,6 @@ function buildTopicButtons(defaultKey) {
             });
     });
 }
-
-
 
 function init() {
     // build svg once in init; createvis w remove and redraw it when category changes 
@@ -204,19 +316,22 @@ function init() {
         })
         .catch(error => console.error("Error loading data.json:", error));
 
-
-
-    // legend stuff
     const legendStops = [
-        { offset: "0%",   color: "#4575b4", label: "Liberal" },
-        { offset: "25%",  color: "#67a9cf", label: "" },
+        { offset: "0%",   color: "#d73027", label: "Conservative" },
+        { offset: "25%",  color: "#ef8a62", label: "" },
         { offset: "50%",  color: "#cccccc", label: "Moderate" },
-        { offset: "75%",  color: "#ef8a62", label: "" },
-        { offset: "100%", color: "#d73027", label: "Conservative" },
+        { offset: "75%",  color: "#67a9cf", label: "" },
+        { offset: "100%", color: "#4575b4", label: "Liberal" },
     ];
 
     const legendHeight = 60;
     const legendBarWidth = 8;
+
+    const valueLabels = [
+        {value: "3", y : 14},
+        {value: "0", y: 13 + legendHeight/2},
+        {value: "-3", y: 10 + legendHeight}
+    ]
 
     const legend = svg.append("g")
         //.attr("transform", `translate(${width - 140}, 20)`);
@@ -244,7 +359,7 @@ function init() {
 
     // gradient bar itself
     legend.append("rect")
-        .attr("x", 0).attr("y", 12)
+        .attr("x", 8).attr("y", 12)
         .attr("width", legendBarWidth)
         .attr("height", legendHeight)
         .attr("fill", "url(#ideology-gradient)");
@@ -253,12 +368,24 @@ function init() {
     legend.selectAll(".legend-label")
         .data(legendStops)
         .join("text")
-        .attr("x", legendBarWidth + 8)
+        .attr("x", legendBarWidth + 15)
         .attr("y", (d, i) => 20 + (i / (legendStops.length - 1)) * legendHeight * 0.83)
         .style("font-size", "9px")
         //.style("font-family", "Arial, sans-serif")
         .attr("fill", "#525252")
         .text(d => d.label);
+
+    legend.selectAll(".legend-values")
+        .data(valueLabels)
+        .join("text")
+        .attr("class", "legend-values")
+        .attr("x", 2.5) // left of gradient bar
+        .attr("y", d => d.y)
+        .attr("text-anchor", "end")
+        .attr("dominant-baseline", "middle")
+        .style("font-size", "9px")
+        .attr("fill", "#525252")
+        .text(d => d.value);
 
     legend.insert("rect", ":first-child")
         .attr("x", -10)
