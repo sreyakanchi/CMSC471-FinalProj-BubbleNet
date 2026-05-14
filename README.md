@@ -19,7 +19,7 @@ The visualization uses the replication archive from Barbera et al. (2015), "Twee
 I set up the initial project structure and implemented the force-directed graph, including creating node and edge network layout. I worked on adjusting the node scaling based on connectivity to improve the visual representation of the data. I also implemented the ideological distribution bar chart for each topic, which shows the breakdown of user ideology within the Twitter users we sampled.
 
 **Sreya Kanchi**  
-...
+I worked on the user experience of the webpage, including formatting of the node and edge network layout. I worked on adjusting the zoom capabilties of the node/edge network display and making recommendations for the sizing of popular nodes and thickness of edges. I also assisted in the design behind the ideology label that displayed the level of political affilitation. 
 
 **Sarah King**  
 I wrote + formatted the information on the webpage, including the initial description, background, data selection, and sources section. I read the article our visualization was based on and summarized it in the background section as well as found sources that clearly defined what an echo chamber is.  I also worked on the tooltips for each node in the visualization, displaying the ideology label + score.
