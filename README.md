@@ -22,7 +22,7 @@ I set up the initial project structure and implemented the force-directed graph,
 ...
 
 **Sarah King**  
-...
+I wrote + formatted the information on the webpage, including the initial description, background, data selection, and sources section. I read the article our visualization was based on and summarized it in the background section as well as found sources that clearly defined what an echo chamber is.  I also worked on the tooltips for each node in the visualization, displaying the ideology label + score.
 
 **Yooeun Lee**  
 I set up the data pipeline, working with pre-processed outputs from the authors' research archive. This meant loading and exporting ideology scores from the authors' R data files, writing a python program to convert 11 per-topic retweet edge CSVs into a single `data.json` for D3 (1,000 edges per topic). I also worked on the front-end, building the controls area — a two-row button system organized by topic type — and the status bar showing the current topic name and category badge.
