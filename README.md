@@ -6,11 +6,12 @@ A visualiation of retweet networks across 11 topics drawn from a study of 150 mi
 Select any topic using the buttons above the graph to view any patterns arising depending on the discussion, whether political or non-political. 
 
 The project can be viewed here: https://sreyakanchi.github.io/CMSC471-FinalProj-BubbleNet/
+<br><br>
 
 ## Dataset
 
 The visualization uses the replication archive from Barbera et al. (2015), "Tweeting from Left to Right: Is Online Political Communication More Than an Echo Chamber?" (Psychological Science), publicly available on Harvard Dataverse at dx.doi.org/10.7910/DVN/F9ICHH.
-
+<br><br>
 
 ## Team Members & Contributions
 
