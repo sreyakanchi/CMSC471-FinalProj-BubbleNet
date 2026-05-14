@@ -14,18 +14,18 @@ The visualization uses the replication archive from Barbera et al. (2015), "Twee
 
 ## Team Members & Contributions
 
-**Srinidhi Arumugam** 
+**Srinidhi Arumugam**  
 I set up the initial project structure and implemented the force-directed graph, including creating node and edge network layout. I worked on adjusting the node scaling based on connectivity to improve the visual representation of the data. I also implemented the ideological distribution bar chart for each topic, which shows the breakdown of user ideology within the Twitter users we sampled.
 
-**Sreya Kanchi**
+**Sreya Kanchi**  
 ...
 
-**Sarah King**
+**Sarah King**  
 ...
 
-**Yooeun Lee**
+**Yooeun Lee**  
 I set up the data pipeline, working with pre-processed outputs from the authors' research archive. This meant loading and exporting ideology scores from the authors' R data files, writing a python program to convert 11 per-topic retweet edge CSVs into a single `data.json` for D3 (1,000 edges per topic). I also worked on the front-end, building the controls area — a two-row button system organized by topic type — and the status bar showing the current topic name and category badge.
 
 
-**Donovan Lee**
+**Donovan Lee**  
 ...
