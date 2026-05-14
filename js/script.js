@@ -10,7 +10,7 @@ const TOPICS = [
     { key: "oscars",             label: "Oscars",              type: "non-political" },
     { key: "sotu",               label: "State of the Union",  type: "political" },
     { key: "superbowl",          label: "Super Bowl",          type: "non-political" },
-    { key: "syria",              label: "Syria",               type: "political" },
+    { key: "syria",              label: "Syria",               type: "non-political" },
 ];
 
 let allData;
@@ -106,6 +106,20 @@ function createVis(data) {
         .attr("stroke-width", 1); 
 
     //nodes
+    function ideology(ideology_score){
+        if(ideology_score <= -2){
+            return "Very Liberal"
+        } else if (ideology_score < -1){
+            return "Liberal"
+        } else if(ideology_score <= 1){
+            return "Moderate"
+        } else if(ideology_score < 2){
+            return "Conservative"
+        } else {
+            return "Very Conservative"
+        }
+    }
+
     const node = g.append("g")
         .attr("stroke", "#fff")
         .attr("stroke-width", 1.5)
@@ -115,7 +129,23 @@ function createVis(data) {
         // scaling
         .attr("r", d => radiusScale(d.degree))
         // color
-        .attr("fill", d => color(d));
+        .attr("fill", d => color(d))
+        .on('mouseover', function(event, d){
+            d3.select('#tooltip')
+            .style("display", 'block')
+            .html(`<strong>${ideology(d.ideology)}</strong><br><strong>Ideology Score:</strong> ${d.ideology}`)
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY - 28) + "px");    
+            d3.select(this)
+            .style('stroke', 'black')
+            .style('stroke-width', '1px')
+        })
+        .on('mouseout', function(event, d){
+            d3.select('#tooltip')
+            .style('display', 'none') 
+            d3.select(this)
+            .style('stroke-width', '0px')
+        });
 
     const barData = Object.entries(ideologyCounts).map(([group, count]) => ({
         group,
@@ -222,10 +252,6 @@ function createVis(data) {
     }
 }
 
-
-
-
-
 // builds the  buttons to toggle between diff topics 
 function buildTopicButtons(defaultKey) {
     TOPICS.forEach(topic => {
@@ -252,8 +278,6 @@ function buildTopicButtons(defaultKey) {
             });
     });
 }
-
-
 
 function init() {
     // build svg once in init; createvis w remove and redraw it when category changes 
@@ -292,19 +316,22 @@ function init() {
         })
         .catch(error => console.error("Error loading data.json:", error));
 
-
-
-    // legend stuff
     const legendStops = [
-        { offset: "0%",   color: "#4575b4", label: "Liberal" },
-        { offset: "25%",  color: "#67a9cf", label: "" },
+        { offset: "0%",   color: "#d73027", label: "Conservative" },
+        { offset: "25%",  color: "#ef8a62", label: "" },
         { offset: "50%",  color: "#cccccc", label: "Moderate" },
-        { offset: "75%",  color: "#ef8a62", label: "" },
-        { offset: "100%", color: "#d73027", label: "Conservative" },
+        { offset: "75%",  color: "#67a9cf", label: "" },
+        { offset: "100%", color: "#4575b4", label: "Liberal" },
     ];
 
     const legendHeight = 60;
     const legendBarWidth = 8;
+
+    const valueLabels = [
+        {value: "3", y : 14},
+        {value: "0", y: 13 + legendHeight/2},
+        {value: "-3", y: 10 + legendHeight}
+    ]
 
     const legend = svg.append("g")
         //.attr("transform", `translate(${width - 140}, 20)`);
@@ -332,7 +359,7 @@ function init() {
 
     // gradient bar itself
     legend.append("rect")
-        .attr("x", 0).attr("y", 12)
+        .attr("x", 8).attr("y", 12)
         .attr("width", legendBarWidth)
         .attr("height", legendHeight)
         .attr("fill", "url(#ideology-gradient)");
@@ -341,12 +368,24 @@ function init() {
     legend.selectAll(".legend-label")
         .data(legendStops)
         .join("text")
-        .attr("x", legendBarWidth + 8)
+        .attr("x", legendBarWidth + 15)
         .attr("y", (d, i) => 20 + (i / (legendStops.length - 1)) * legendHeight * 0.83)
         .style("font-size", "9px")
         //.style("font-family", "Arial, sans-serif")
         .attr("fill", "#525252")
         .text(d => d.label);
+
+    legend.selectAll(".legend-values")
+        .data(valueLabels)
+        .join("text")
+        .attr("class", "legend-values")
+        .attr("x", 2.5) // left of gradient bar
+        .attr("y", d => d.y)
+        .attr("text-anchor", "end")
+        .attr("dominant-baseline", "middle")
+        .style("font-size", "9px")
+        .attr("fill", "#525252")
+        .text(d => d.value);
 
     legend.insert("rect", ":first-child")
         .attr("x", -10)
