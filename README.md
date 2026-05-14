@@ -29,4 +29,4 @@ I set up the data pipeline, working with pre-processed outputs from the authors'
 
 
 **Donovan Lee**  
-...
+I set up a coloring system for the data, creating a three point gradient to represent a node's ideology, from red for most conservative to gray for moderate to blue for most liberal. I created a small legend in the corner for these colors and ideologies. I also made the sizing system for the nodes, which uses d3.scaleSqrt to adjust the size of nodes based on their number of connected edges. 
