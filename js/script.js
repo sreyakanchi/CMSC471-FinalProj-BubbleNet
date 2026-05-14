@@ -71,7 +71,7 @@ function createVis(data) {
         n.degree = degree[n.id] || 0;
     });
     
-    // size, can change range later
+    // size
     const radiusScale = d3.scaleSqrt()
         .domain(d3.extent(nodes, d => d.degree))
         .range([4, 40]);
@@ -106,6 +106,7 @@ function createVis(data) {
         .attr("stroke-width", 1); 
 
     //nodes
+    //used to classify ideology for tooltips
     function ideology(ideology_score){
         if(ideology_score <= -2){
             return "Very Liberal"
@@ -130,6 +131,7 @@ function createVis(data) {
         .attr("r", d => radiusScale(d.degree))
         // color
         .attr("fill", d => color(d))
+        //tooltips
         .on('mouseover', function(event, d){
             d3.select('#tooltip')
             .style("display", 'block')
